@@ -44,12 +44,19 @@ const (
 	sVpcInterExtIP2  = "100.65.0.2"
 	VpcInterExtMac1  = "ee:ee:ee:ee:ee:f0"
 	VpcInterExtMac2  = "ee:ee:ee:ee:ee:f1"
+	VpcInterVppMask  = 30
+	sVpcInterVppIP1  = "100.66.0.1"
+	sVpcInterVppIP2  = "100.66.0.2"
+	VpcInterVppMac1  = "ee:ee:ee:ee:e0:f0"
+	VpcInterVppMac2  = "ee:ee:ee:ee:e0:f1"
 )
 
 var (
 	vpcInterCidr   netutils.IPV4Prefix
 	vpcInterExtIP1 netutils.IPV4Addr
 	vpcInterExtIP2 netutils.IPV4Addr
+	vpcInterVppIP1 netutils.IPV4Addr
+	vpcInterVppIP2 netutils.IPV4Addr
 )
 
 func VpcInterCidr() netutils.IPV4Prefix {
@@ -62,6 +69,13 @@ func VpcInterExtIP1() netutils.IPV4Addr {
 
 func VpcInterExtIP2() netutils.IPV4Addr {
 	return vpcInterExtIP2
+}
+
+func VpcInterVppIP1() netutils.IPV4Addr {
+	return vpcInterVppIP1
+}
+func VpcInterVppIP2() netutils.IPV4Addr {
+	return vpcInterVppIP2
 }
 
 const (
@@ -127,6 +141,9 @@ func init() {
 	vpcInterCidr = mp(netutils.NewIPV4Prefix(sVpcInterCidr))
 	vpcInterExtIP1 = mi(netutils.NewIPV4Addr(sVpcInterExtIP1))
 	vpcInterExtIP2 = mi(netutils.NewIPV4Addr(sVpcInterExtIP2))
+
+	vpcInterVppIP1 = mi(netutils.NewIPV4Addr(sVpcInterVppIP1))
+	vpcInterVppIP2 = mi(netutils.NewIPV4Addr(sVpcInterVppIP2))
 
 	vpcMappedCidr = mp(netutils.NewIPV4Prefix(sVpcMappedCidr))
 	vpcMappedGatewayIP = mi(netutils.NewIPV4Addr(sVpcMappedGatewayIP))
