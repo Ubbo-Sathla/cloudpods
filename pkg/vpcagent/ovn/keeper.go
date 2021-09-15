@@ -110,46 +110,6 @@ func (keeper *OVNNorthboundKeeper) ClaimVpc(ctx context.Context, vpc *agentmodel
 		vpcExtDefaultRoute *ovn_nb.LogicalRouterStaticRoute
 	)
 
-	var (
-		vpp      = true
-		vpcVppLs *ovn_nb.LogicalSwitch
-		vpcRvppp *ovn_nb.LogicalRouterPort
-		vpcVpprp *ovn_nb.LogicalSwitchPort
-		vpcVppep *ovn_nb.LogicalSwitchPort
-	)
-
-	if vpp {
-		vpcVppLs = &ovn_nb.LogicalSwitch{
-			Name: vpcVppLsName(vpc.Id),
-		}
-
-		vpcRvppp = &ovn_nb.LogicalRouterPort{
-			Name:     vpcRvpppName(vpc.Id),
-			Mac:      apis.VpcInterVppMac1,
-			Networks: []string{fmt.Sprintf("%s/%d", apis.VpcInterVppIP1(), apis.VpcInterVppMask)},
-		}
-
-		vpcVpprp = &ovn_nb.LogicalSwitchPort{
-			Name:      vpcVpprpName(vpc.Id),
-			Type:      "router",
-			Addresses: []string{"router"},
-			Options: map[string]string{
-				"router-port": vpcRvpppName(vpc.Id),
-			},
-		}
-
-		vpcVppep = &ovn_nb.LogicalSwitchPort{
-			Name:      vpcVppepName(vpc.Id),
-			Addresses: []string{fmt.Sprintf("%s %s", apis.VpcInterVppMac2, apis.VpcInterVppIP2().String())},
-		}
-		irows = append(irows,
-			vpcVppLs,
-			vpcRvppp,
-			vpcVpprp,
-			vpcVppep,
-		)
-	}
-
 	if hasDistgw || hasEipgw {
 		vpcExtLr = &ovn_nb.LogicalRouter{
 			Name: vpcExtLrName(vpc.Id),
@@ -302,16 +262,7 @@ func (keeper *OVNNorthboundKeeper) ClaimVpc(ctx context.Context, vpc *agentmodel
 		args = append(args, "--", "add", "Logical_Switch", vpcEipLs.Name, "ports", "@"+vpcErp.Name)
 		args = append(args, "--", "add", "Logical_Router", vpcExtLr.Name, "ports", "@"+vpcRep.Name)
 	}
-	if vpp {
-		args = append(args, ovnCreateArgs(vpcVppLs, vpcVppLs.Name)...)
-		args = append(args, ovnCreateArgs(vpcRvppp, vpcRvppp.Name)...)
-		args = append(args, ovnCreateArgs(vpcVpprp, vpcVpprp.Name)...)
-		args = append(args, ovnCreateArgs(vpcVppep, vpcVppep.Name)...)
-		args = append(args, "--", "add", "Logical_Switch", vpcVppLs.Name, "ports", "@"+vpcVpprp.Name)
-		args = append(args, "--", "add", "Logical_Router", vpcLrName(vpc.Id), "ports", "@"+vpcRvppp.Name)
-		args = append(args, "--", "add", "Logical_Switch", vpcVppLs.Name, "ports", "@"+vpcVppep.Name)
 
-	}
 	return keeper.cli.Must(ctx, "ClaimVpc", args)
 }
 

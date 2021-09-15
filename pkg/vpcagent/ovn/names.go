@@ -89,21 +89,3 @@ func netMdpName(netId string) string {
 func gnpName(netId string, ifname string) string {
 	return fmt.Sprintf("iface-%s-%s", netId, ifname)
 }
-
-// vpp
-
-func vpcVppLsName(vpcId string) string {
-	return fmt.Sprintf("vpc-vpp/%s", vpcId)
-}
-
-func vpcRvpppName(vpcId string) string {
-	return fmt.Sprintf("vpc-rvpp/%s", vpcId)
-}
-
-func vpcVpprpName(vpcId string) string {
-	return fmt.Sprintf("vpc-vppr/%s", vpcId)
-}
-
-func vpcVppepName(vpcId string) string {
-	return fmt.Sprintf("vpc-vppe/%s", vpcId)
-}
