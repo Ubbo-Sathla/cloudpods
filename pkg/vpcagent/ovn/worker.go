@@ -120,6 +120,8 @@ func (w *Worker) run(ctx context.Context, mss *agentmodels.ModelSets) (err error
 			continue
 		}
 		ovndb.ClaimVpc(ctx, vpc)
+		ovndb.ClaimVpp(ctx, vpc)
+		ovndb.ClaimVppLogicalRouterStaticRoute(ctx, vpc)
 		if vpcHasEipgw(vpc) {
 			ovndb.ClaimVpcEipgw(ctx, vpc)
 		}
