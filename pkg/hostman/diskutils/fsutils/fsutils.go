@@ -251,6 +251,8 @@ func ResizePartitionFs(fpath, fs string, raiseError bool) (error, bool) {
 		uuid := uuids["UUID"]
 		if len(uuid) > 0 {
 			kvmpart.LockXfsPartition(uuid)
+			kvmpart.ChangeXfsUuid(kvmpart.Uuid(), fpath)
+			defer kvmpart.ChangeXfsUuid(uuid, fpath)
 			defer kvmpart.UnlockXfsPartition(uuid)
 		}
 		cmds = [][]string{{"mkdir", "-p", tmpPoint},

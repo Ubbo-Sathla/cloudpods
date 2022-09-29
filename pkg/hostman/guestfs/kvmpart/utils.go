@@ -15,7 +15,9 @@
 package kvmpart
 
 import (
+	"github.com/google/uuid"
 	"sync"
+	"yunion.io/x/onecloud/pkg/util/procutils"
 
 	"yunion.io/x/log"
 )
@@ -52,3 +54,15 @@ var (
 	mapLock            = sync.Mutex{}
 	xfsMountUniqueTool = map[string]*sync.Mutex{}
 )
+
+func ChangeXfsUuid(uuid string, partDev string) error {
+	var cmds = []string{"xfs_admin", "-U", uuid, partDev}
+
+	output, err := procutils.NewCommand(cmds[0], cmds[1:]...).Output()
+	log.Errorf("change uuid fail: %s %s", err, output)
+
+	return err
+}
+func Uuid() string {
+	return uuid.New().String()
+}

@@ -169,6 +169,7 @@ func (p *SKVMGuestDiskPartition) mount(readonly bool) error {
 		p.uuid, _ = uuids["UUID"]
 		if len(p.uuid) > 0 {
 			LockXfsPartition(p.uuid)
+			ChangeXfsUuid(Uuid(), p.partDev)
 			defer func() {
 				if err != nil {
 					UnlockXfsPartition(p.uuid)
@@ -254,6 +255,7 @@ func (p *SKVMGuestDiskPartition) Umount() error {
 	defer func() {
 		if p.fs == "xfs" && len(p.uuid) > 0 {
 			UnlockXfsPartition(p.uuid)
+			ChangeXfsUuid(p.uuid, p.partDev)
 		}
 	}()
 
